@@ -1,15 +1,13 @@
 import React from "react";
 import "./App.css";
 
-type Monster = {
-    name: string;
-    id: string;
-};
+import { CardList } from "./components/card-list/card-list.component";
+import { Item } from "./components/card/card.component";
 
 type AppProps = {};
 
 type AppState = {
-    monsters: Monster[];
+    monsters: Item[];
 };
 
 class App extends React.Component<AppProps, AppState> {
@@ -26,16 +24,14 @@ class App extends React.Component<AppProps, AppState> {
         );
         const jsonResponse = await response.json();
         this.setState({
-            monsters: jsonResponse as Monster[],
+            monsters: jsonResponse as Item[],
         });
     }
 
     render() {
         return (
             <div className="App">
-                {this.state.monsters?.map((monster) => (
-                    <h1 key={monster.id}>{monster.name}</h1>
-                ))}
+                <CardList items={this.state.monsters} />
             </div>
         );
     }
