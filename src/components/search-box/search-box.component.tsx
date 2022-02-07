@@ -1,7 +1,22 @@
 import React from "react";
 
-interface SearchBoxProps {}
+import "./search-box.styles.css";
 
-export const SearchBox: React.FC<SearchBoxProps> = ({}) => {
-    return <div></div>;
+interface SearchBoxProps {
+    handleChange: React.ChangeEventHandler<HTMLInputElement>;
+    placeholder: string;
+}
+
+export const SearchBox: React.FC<SearchBoxProps> = ({
+    handleChange,
+    placeholder,
+}) => {
+    return (
+        <input
+            className="search"
+            type="search"
+            placeholder={placeholder}
+            onChange={handleChange}
+        />
+    );
 };
