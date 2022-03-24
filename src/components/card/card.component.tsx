@@ -14,14 +14,15 @@ interface CardProps {
 }
 
 export const Card: React.FC<CardProps> = ({ item }) => {
+    const { id, name, email } = item;
     return (
         <div className="card-container">
             <img
-                alt="monster"
-                src={`https://robohash.org/${item.id}?set=set2&size=180x180`}
+                alt={`monster ${name}`}
+                src={`https://robohash.org/${id}?set=set2&size=180x180`}
             />
-            <h2>{item.name}</h2>
-            <p>{item.email}</p>
+            <h2>{name}</h2>
+            <p>{email}</p>
         </div>
     );
 };

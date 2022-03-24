@@ -1,56 +1,55 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "./App.css";
 
 import { CardList } from "./components/card-list/card-list.component";
 import { Item } from "./components/card/card.component";
 import { SearchBox } from "./components/search-box/search-box.component";
 
-type AppProps = {};
-
 type AppState = {
     monsters: Item[];
     searchField: string;
 };
 
-class App extends React.Component<AppProps, AppState> {
-    constructor(props: {}) {
-        super(props);
-        this.state = {
-            monsters: [],
-            searchField: "",
-        };
-    }
+interface AppProps {}
 
-    async componentDidMount() {
+export const App: React.FC<AppProps> = ({}) => {
+    const [monsters, setMonsters] = useState<Item[]>([]);
+    const [searchField, setSearchField] = useState<string>("");
+    const [fitleredMonsters, setFilteredMonsters] = useState<Item[]>(monsters);
+
+    const fetchMonsters = async () => {
         const response = await fetch(
             "https://jsonplaceholder.typicode.com/users"
         );
         const jsonResponse = await response.json();
-        this.setState({
-            monsters: jsonResponse as Item[],
-        });
-    }
-
-    handleSearchBoxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        this.setState({ searchField: e.target.value });
+        setMonsters(jsonResponse as Item[]);
     };
 
-    render() {
-        const { monsters, searchField } = this.state;
-        const filteredMonsters = monsters.filter((monster) =>
+    useEffect(() => {
+        fetchMonsters();
+    }, []);
+
+    useEffect(() => {
+        const filteredMonstersArray = monsters.filter((monster) =>
             monster.name.toLowerCase().includes(searchField)
         );
-        return (
-            <div className="App">
-                <h1>Monsters Rolodex</h1>
-                <SearchBox
-                    placeholder="search monsters"
-                    handleChange={this.handleSearchBoxChange}
-                />
-                <CardList items={filteredMonsters} />
-            </div>
-        );
-    }
-}
+        setFilteredMonsters(filteredMonstersArray);
+    }, [monsters, searchField]);
+
+    const handleSearchBoxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setSearchField(e.target.value);
+    };
+
+    return (
+        <div className="App">
+            <h1>Monsters Rolodex</h1>
+            <SearchBox
+                placeholder="search monsters"
+                handleChange={handleSearchBoxChange}
+            />
+            <CardList items={fitleredMonsters} />
+        </div>
+    );
+};
 
 export default App;
